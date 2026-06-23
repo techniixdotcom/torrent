@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:fw="http://schemas.microsoft.com/wix/FirewallExtension"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+    <Fragment>
+        <ComponentGroup Id="CG_MainApplication" Directory="INSTALLDIR">
+            <Component Id="C_NiiXTorrent.exe" Guid="169a73f0-13f4-4048-9b34-64df0e4d520a">
+                <File Id="F_NiiXTorrent.exe"
+                    KeyPath="yes"
+                    Name="NiiXTorrent.exe"
+                    Source="$(var.PublishDirectory)\NiiXTorrent.exe" />
+
+                <Shortcut Id="S_NiiXTorrent"
+                    Directory="ProgramMenuFolder"
+                    Name="NiiX Torrent"
+                    WorkingDirectory="INSTALLDIR"
+                    Icon="I_NiiXTorrent.ico"
+                    IconIndex="0"
+                    Advertise="yes" />
+            </Component>
+
+            <Component Id="C_coredb.sqlite" Guid="e5771b91-7abf-48c1-80f4-69cf7af6d095">
+                <File Id="F_coredb.sqlite"
+                    KeyPath="yes"
+                    Name="coredb.sqlite"
+                    Source="$(var.PublishDirectory)\coredb.sqlite" />
+            </Component>
+
+<?if $(var.WithCrashpad) = "yes" ?>
+            <Component Id="C_crashpad_handler.exe" Guid="896218e7-fd1d-44a1-8aae-d946d2816ba1">
+                <File Id="F_crashpad_handler.exe"
+                    KeyPath="yes"
+                    Name="crashpad_handler.exe"
+                    Source="$(var.PublishDirectory)\crashpad_handler.exe" />
+            </Component>
+<?endif ?>
+
+            <Component Id="C_Plugin_Updater.dll" Guid="1315e610-05db-4b90-9178-d50914445103">
+                <File Id="F_Plugin_Updater.dll"
+                    KeyPath="yes"
+                    Name="Plugin_Updater.dll"
+                    Source="$(var.PublishDirectory)\Plugin_Updater.dll" />
+            </Component>
+
+            <Component Id="C_Registry" Guid="8e16aa96-c993-466c-963d-42eb27041bea">
+                <RegistryKey Root="HKLM" Key="SOFTWARE\NiiXTorrent">
+                    <RegistryValue Name="InstallDirectory" Value="[INSTALLDIR]" Type="string" />
+                </RegistryKey>
+            </Component>
+
+            <!-- Removes EVERYTHING NiiX Torrent writes outside the install folder on uninstall:
+                 the per-user data folder (database + logs + config) and the run-at-startup entry.
+                 Installed files, shortcuts and the HKLM keys above are removed by Windows Installer. -->
+            <Component Id="C_CleanupUserData" Guid="a7e3c2d1-8b94-4f6a-9c1e-2d5f7a8b3c40">
+                <RegistryKey Root="HKCU" Key="Software\NiiXTorrent" ForceDeleteOnUninstall="yes">
+                    <RegistryValue Name="UninstallLocalAppDataPath"
+                                   Type="string"
+                                   Value="[LocalAppDataFolder]NiiX Torrent"
+                                   KeyPath="yes" />
+                </RegistryKey>
+
+                <util:RemoveFolderEx On="uninstall" Property="NIIXLOCALAPPDATADIR" />
+
+                <RemoveRegistryValue Root="HKCU"
+                                     Key="Software\Microsoft\Windows\CurrentVersion\Run"
+                                     Name="NiiXTorrent" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="CG_FirewallException" Directory="INSTALLDIR">
+            <Component Id="C_FirewallException_NiiXTorrent" Guid="fb45e1e4-477d-4e10-a3c3-e45f10160b80" KeyPath="yes">
+                <fw:FirewallException
+                    Id="FW_FirewallException_NiiXTorrent"
+                    File="F_NiiXTorrent.exe"
+                    Name="NiiX Torrent: Allow TCP and UDP"
+                    Scope="any" />
+            </Component>
+        </ComponentGroup>
+
+        <ComponentGroup Id="CG_Associations" Directory="INSTALLDIR">
+            <Component Id="C_Associations" Guid="5d9feb8d-4320-48c4-a278-2c68b5f67864" KeyPath="yes">
+                <RegistryKey Root="HKLM" Key="SOFTWARE">
+                    <RegistryKey Key="Classes">
+                        <!-- Register magnet link protocol -->
+                        <RegistryKey Key="magnet">
+                            <RegistryValue Type="string" Value="URL:BitTorrent magnet link" />
+
+                            <RegistryValue Type="string" Name="Content Type" Value="application/x-magnet" />
+                            <RegistryValue Type="string" Name="URL Protocol" Value="" />
+
+                            <RegistryKey Key="OpenWithProgIds">
+                                <RegistryValue Type="string" Name="NiiXTorrent" Value="" />
+                            </RegistryKey>
+
+                            <RegistryKey Key="shell\open\command">
+                                <RegistryValue Type="string" Value="&quot;[INSTALLDIR]NiiXTorrent.exe&quot; &quot;%1&quot;" />
+                            </RegistryKey>
+                        </RegistryKey>
+
+                        <!-- Register file type -->
+                        <RegistryKey Key=".torrent">
+                            <RegistryValue Type="string" Value="NiiXTorrent" />
+                            <RegistryValue Type="string" Name="Content Type" Value="application/x-bittorrent" />
+
+                            <RegistryKey Key="OpenWithProgIds">
+                                <RegistryValue Type="string" Name="NiiXTorrent" Value="" />
+                            </RegistryKey>
+                        </RegistryKey>
+
+                        <!-- Register ProgId -->
+                        <RegistryKey Key="NiiXTorrent">
+                            <RegistryValue Type="string" Value="NiiX Torrent BitTorrent file" />
+
+                            <RegistryKey Key="DefaultIcon">
+                                <RegistryValue Type="string" Value="[INSTALLDIR]NiiXTorrent.exe,1" />
+                            </RegistryKey>
+
+                            <RegistryKey Key="shell\open\command">
+                                <RegistryValue Type="string" Value="&quot;[INSTALLDIR]NiiXTorrent.exe&quot; &quot;%1&quot;" />
+                            </RegistryKey>
+                        </RegistryKey>
+
+                        <!-- Application information -->
+                        <RegistryKey Key="Applications\NiiXTorrent.exe">
+                            <RegistryKey Key="SupportedTypes">
+                                <RegistryValue Name=".torrent" Value="" Type="string" />
+                            </RegistryKey>
+
+                            <RegistryKey Key="shell\open">
+                                <RegistryValue Name="FriendlyAppName" Value="NiiX Torrent" Type="string" />
+                            </RegistryKey>
+                        </RegistryKey>
+                    </RegistryKey>
+
+                    <!-- Software and capabilities -->
+                    <RegistryKey Key="NiiXTorrent">
+                        <RegistryKey Key="Capabilities">
+                            <RegistryValue Name="ApplicationDescription" Value="A tiny, hackable BitTorrent client" Type="string" />
+                            <RegistryValue Name="ApplicationIcon" Value="[INSTALLDIR]NiiXTorrent.exe,0" Type="string" />
+                            <RegistryValue Name="ApplicationName" Value="NiiX Torrent" Type="string" />
+
+                            <RegistryKey Key="DefaultIcon">
+                                <RegistryValue Value="[INSTALLDIR]NiiXTorrent.exe,0" Type="string" />
+                            </RegistryKey>
+
+                            <RegistryKey Key="FileAssociations">
+                                <RegistryValue Name=".torrent" Value="NiiXTorrent" Type="string" />
+                            </RegistryKey>
+
+                            <RegistryKey Key="MIMEAssociations">
+                                <RegistryValue Name="application/x-bittorrent" Value="NiiXTorrent" Type="string" />
+                            </RegistryKey>
+
+                            <RegistryKey Key="UrlAssociations">
+                                <RegistryValue Type="string" Name="magnet" Value="NiiXTorrent" />
+                            </RegistryKey>
+                        </RegistryKey>
+                    </RegistryKey>
+
+                    <!-- Registered applications -->
+                    <RegistryKey Key="RegisteredApplications">
+                        <RegistryValue Type="string" Name="NiiX Torrent" Value="SOFTWARE\NiiXTorrent\Capabilities" />
+                    </RegistryKey>
+
+                    <RegistryKey Key="Microsoft\Windows\CurrentVersion\App Paths\NiiXTorrent.exe">
+                        <RegistryValue Type="string" Value="[INSTALLDIR]NiiXTorrent.exe" />
+                        <RegistryValue Type="string" Name="SupportedProtocols" Value="magnet" />
+                    </RegistryKey>
+                </RegistryKey>
+            </Component>
+        </ComponentGroup>
+    </Fragment>
+</Wix>

@@ -1,0 +1,22 @@
+NiiX Torrent
+===========
+
+Overview
+--------
+
+NiiX Torrent is a tiny BitTorrent client for Windows. It is written in C++ using
+Rasterbar-libtorrent and wxWidgets.
+
+.. note:: In case you find errors in this documentation you can help by sending
+          `pull requests <https://github.com/niixtorrent/niixtorrent>`_!
+
+
+.. toctree::
+   :maxdepth: 1
+
+   installing
+   configuration
+   ipfilter
+   creating-torrents
+   keyboard-shortcuts
+   pql

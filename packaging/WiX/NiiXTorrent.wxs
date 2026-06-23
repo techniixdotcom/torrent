@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?if $(var.Platform) = "x64" ?>
+    <?define UpgradeCode = "5c98558e-a19b-404b-8723-91b9e53f5dce" ?>
+<?else ?>
+    <?define UpgradeCode = "58bcb53f-9525-4d1c-9087-407719e85c32" ?>
+<?endif ?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
+
+    <Product Id="*"
+        UpgradeCode="$(var.UpgradeCode)"
+        Name="NiiX Torrent"
+        Manufacturer="techniix"
+        Language="1033"
+        Version="$(var.Version)">
+
+        <Package Id="*"
+            Description="NiiX Torrent installer"
+            Compressed="yes"
+            InstallScope="perMachine"
+            InstallerVersion="301" />
+
+        <MajorUpgrade DowngradeErrorMessage="A later version of [ProductName] is already installed. Setup will now exit." />
+
+        <Media Id="1" Cabinet="NiiXTorrent.cab" EmbedCab="yes" CompressionLevel="high" />
+        <Icon Id="I_NiiXTorrent.ico" SourceFile="$(var.ResourceDirectory)\app.ico" />
+
+        <DirectoryRef Id="TARGETDIR" />
+
+        <util:CloseApplication Id="CloseApp"
+                               Target="NiiXTorrent.exe"
+                               RebootPrompt="no"
+                               EndSessionMessage="yes" />
+
+        <!-- Launch NiiX Torrent (as the user, not elevated) after a successful install -->
+        <CustomAction Id="CA_LaunchApplication"
+                      FileKey="F_NiiXTorrent.exe"
+                      ExeCommand=""
+                      Execute="immediate"
+                      Impersonate="yes"
+                      Return="asyncNoWait" />
+
+        <!-- Resolve %LOCALAPPDATA%\NiiX Torrent at uninstall so it can be fully removed -->
+        <Property Id="NIIXLOCALAPPDATADIR">
+            <RegistrySearch Id="Search_NIIXLOCALAPPDATADIR"
+                            Root="HKCU"
+                            Key="Software\NiiXTorrent"
+                            Name="UninstallLocalAppDataPath"
+                            Type="raw" />
+        </Property>
+
+        <InstallExecuteSequence>
+            <Custom Action="WixCloseApplications"
+                    Before="InstallValidate">1</Custom>
+            <Custom Action="CA_LaunchApplication"
+                    After="InstallFinalize">NOT Installed</Custom>
+        </InstallExecuteSequence>
+
+        <Feature Id="F_Complete"
+                 Title="NiiX Torrent"
+                 Absent="disallow"
+                 ConfigurableDirectory="INSTALLDIR"
+                 Display="expand"
+                 Level="1">
+
+            <ComponentGroupRef Id="CG_MainApplication" />
+
+            <Feature Id="F_Firewall"
+                     Absent="allow"
+                     Level="1">
+                <Condition Level="0">SKIP_FIREWALL_EXCEPTION = 1</Condition>
+                <ComponentGroupRef Id="CG_FirewallException" />
+            </Feature>
+
+            <Feature Id="F_Handlers"
+                     Absent="allow"
+                     Level="1">
+                <Condition Level="0">SKIP_ASSOCIATE_FILES = 1</Condition>
+                <ComponentGroupRef Id="CG_Associations" />
+            </Feature>
+        </Feature>
+
+        <Property Id="ARPPRODUCTICON" Value="I_NiiXTorrent.ico" />
+    </Product>
+</Wix>
