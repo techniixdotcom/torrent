@@ -6,7 +6,7 @@ A fast, lightweight, dark-themed BitTorrent client for Windows, built in modern
 C++ on top of Rasterbar-libtorrent.
 
 NiiX Torrent is a fork of [PicoTorrent](https://github.com/picotorrent/picotorrent),
-which is no longer being developed. I will continued and maintaine under the new
+which is no longer being developed. I will continued and maintain under the new
 name **NiiX Torrent**, rebuilt against the latest versions of every dependency and 
 carrying the NiiX brand palette throughout the UI.
 
@@ -17,7 +17,7 @@ carrying the NiiX brand palette throughout the UI.
 
 
 
-The love - translations
+translations made with love by:
 
 🇮🇩 Indonesian by @zmni
 🇮🇹 Italian by @bovirus
