@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Input;
 
-namespace PicoTorrentBootstrapper.ViewModels
+namespace NiiXTorrentBootstrapper.ViewModels
 {
     public sealed class InstallWaitingViewModel : PropertyNotifyBase
     {

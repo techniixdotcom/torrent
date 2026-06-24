@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PicoTorrentBootstrapper.Views
+namespace NiiXTorrentBootstrapper.Views
 {
     /// <summary>
     /// Interaction logic for InstallView.xaml

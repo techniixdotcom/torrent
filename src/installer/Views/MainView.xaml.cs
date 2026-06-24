@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace PicoTorrentBootstrapper.Views
+namespace NiiXTorrentBootstrapper.Views
 {
     public partial class MainView : Window
     {

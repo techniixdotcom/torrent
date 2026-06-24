@@ -1,4 +1,4 @@
-#include <libpico.h>
+#include <libniix.h>
 
 #include <string>
 #include <Windows.h>
@@ -17,36 +17,36 @@
 struct updater_request_data_t
 {
     bool force;
-    libpico_config_t* config;
-    libpico_mainwnd_t* wnd;
+    libniix_config_t* config;
+    libniix_mainwnd_t* wnd;
 };
 
-void show_available_update(libpico_mainwnd_t* wnd, libpico_config_t* config, const char* version, const char* url)
+void show_available_update(libniix_mainwnd_t* wnd, libniix_config_t* config, const char* version, const char* url)
 {
     HWND hWnd = nullptr;
-    libpico_mainwnd_native_handle(wnd, reinterpret_cast<void**>(&hWnd));
+    libniix_mainwnd_native_handle(wnd, reinterpret_cast<void**>(&hWnd));
 
     // get wide version
     wchar_t versionw[100];
-    libpico_string_towide(version, versionw, 100);
+    libniix_string_towide(version, versionw, 100);
 
     wchar_t content[DEFAULT_I18N_BUFFER_SIZE];
     size_t content_len = DEFAULT_I18N_BUFFER_SIZE;
-    libpico_i18n("new_version_available", content, &content_len);
+    libniix_i18n("new_version_available", content, &content_len);
 
     wchar_t main[DEFAULT_I18N_BUFFER_SIZE];
     wchar_t main_format[DEFAULT_I18N_BUFFER_SIZE];
     size_t main_len = DEFAULT_I18N_BUFFER_SIZE;
-    libpico_i18n("picotorrent_v_available", main, &main_len);
+    libniix_i18n("niixtorrent_v_available", main, &main_len);
     swprintf(main_format, DEFAULT_I18N_BUFFER_SIZE, main, versionw);
 
     wchar_t verification[DEFAULT_I18N_BUFFER_SIZE];
     size_t verification_len = DEFAULT_I18N_BUFFER_SIZE;
-    libpico_i18n("ignore_update", verification, &verification_len);
+    libniix_i18n("ignore_update", verification, &verification_len);
 
     wchar_t show[DEFAULT_I18N_BUFFER_SIZE];
     size_t show_len = DEFAULT_I18N_BUFFER_SIZE;
-    libpico_i18n("show_on_github", show, &show_len);
+    libniix_i18n("show_on_github", show, &show_len);
 
     const TASKDIALOG_BUTTON pButtons[] =
     {
@@ -73,7 +73,7 @@ void show_available_update(libpico_mainwnd_t* wnd, libpico_config_t* config, con
     if (pnButton == 1000)
     {
         wchar_t urlw[255];
-        libpico_string_towide(url, urlw, 255);
+        libniix_string_towide(url, urlw, 255);
 
         SHELLEXECUTEINFO sei;
         ZeroMemory(&sei, sizeof(SHELLEXECUTEINFO));
@@ -89,7 +89,7 @@ void show_available_update(libpico_mainwnd_t* wnd, libpico_config_t* config, con
 
     if (pfVerificationFlagChecked)
     {
-        libpico_config_string_set(
+        libniix_config_string_set(
             config,
             "update_checks.ignored_version",
             version,
@@ -97,14 +97,14 @@ void show_available_update(libpico_mainwnd_t* wnd, libpico_config_t* config, con
     }
 }
 
-void show_no_update(libpico_mainwnd_t* wnd)
+void show_no_update(libniix_mainwnd_t* wnd)
 {
     HWND hWnd = nullptr;
-    libpico_mainwnd_native_handle(wnd, reinterpret_cast<void**>(&hWnd));
+    libniix_mainwnd_native_handle(wnd, reinterpret_cast<void**>(&hWnd));
 
     wchar_t main[DEFAULT_I18N_BUFFER_SIZE];
     size_t main_len = DEFAULT_I18N_BUFFER_SIZE;
-    libpico_i18n("no_update_available", main, &main_len);
+    libniix_i18n("no_update_available", main, &main_len);
 
     TASKDIALOGCONFIG tdf = { sizeof(TASKDIALOGCONFIG) };
     tdf.dwCommonButtons = TDCBF_OK_BUTTON;
@@ -117,24 +117,24 @@ void show_no_update(libpico_mainwnd_t* wnd)
     TaskDialogIndirect(&tdf, nullptr, nullptr, nullptr);
 }
 
-libpico_result_t parse_response(
-    libpico_http_response_t* response,
-    libpico_http_status_t status,
-    libpico_param_t* user)
+libniix_result_t parse_response(
+    libniix_http_response_t* response,
+    libniix_http_status_t status,
+    libniix_param_t* user)
 {
     updater_request_data_t* data = reinterpret_cast<updater_request_data_t*>(user);
 
     switch (status)
     {
-    case libpico_http_ok:
+    case libniix_http_ok:
     {
         size_t len;
-        libpico_http_response_body_len(response, &len);
+        libniix_http_response_body_len(response, &len);
 
         if (len > 0)
         {
             std::string body(len, '\0');
-            libpico_http_response_body(response, body.data(), body.size());
+            libniix_http_response_body(response, body.data(), body.size());
 
             const sajson::document& doc = sajson::parse(
                 sajson::dynamic_allocation(),
@@ -153,7 +153,7 @@ libpico_result_t parse_response(
             char ignoredVersion[100];
             size_t ignoredVersionLen = 100;
 
-            libpico_config_string_get(
+            libniix_config_string_get(
                 data->config,
                 "update_checks.ignored_version",
                 ignoredVersion,
@@ -165,7 +165,7 @@ libpico_result_t parse_response(
             }
 
             semver::version parsedVersion(version);
-            semver::version currentVersion(libpico_version());
+            semver::version currentVersion(libniix_version());
 
             if (parsedVersion > currentVersion)
             {
@@ -186,10 +186,10 @@ libpico_result_t parse_response(
     }
     }
 
-    return libpico_ok;
+    return libniix_ok;
 }
 
-void make_request(libpico_config_t* config, libpico_mainwnd_t* wnd, bool force)
+void make_request(libniix_config_t* config, libniix_mainwnd_t* wnd, bool force)
 {
     updater_request_data_t* data = new updater_request_data_t();
     data->config = config;
@@ -199,65 +199,65 @@ void make_request(libpico_config_t* config, libpico_mainwnd_t* wnd, bool force)
     char url[255];
     size_t url_len = 255;
 
-    libpico_config_string_get(config, "update_checks.url", url, &url_len);
-    libpico_http_get(url, parse_response, reinterpret_cast<libpico_param_t*>(data));
+    libniix_config_string_get(config, "update_checks.url", url, &url_len);
+    libniix_http_get(url, parse_response, reinterpret_cast<libniix_param_t*>(data));
 }
 
-libpico_result_t check(libpico_menuitem_t* item, libpico_param_t* param)
+libniix_result_t check(libniix_menuitem_t* item, libniix_param_t* param)
 {
     updater_request_data_t* data = reinterpret_cast<updater_request_data_t*>(param);
     make_request(data->config, data->wnd, data->force);
-    return libpico_ok;
+    return libniix_ok;
 }
 
-libpico_result_t on_events(
-    libpico_event_t event,
-    libpico_param_t* param,
-    libpico_param_t* user)
+libniix_result_t on_events(
+    libniix_event_t event,
+    libniix_param_t* param,
+    libniix_param_t* user)
 {
-    libpico_plugin_t* plugin = reinterpret_cast<libpico_plugin_t*>(user);
+    libniix_plugin_t* plugin = reinterpret_cast<libniix_plugin_t*>(user);
 
     switch (event)
     {
-    case libpico_event_mainwnd_created:
+    case libniix_event_mainwnd_created:
     {
-        libpico_config_t* config = nullptr;
-        libpico_config_get(plugin, &config);
+        libniix_config_t* config = nullptr;
+        libniix_config_get(plugin, &config);
 
         bool enabled = false;
-        libpico_config_bool_get(config, "update_checks.enabled", &enabled);
+        libniix_config_bool_get(config, "update_checks.enabled", &enabled);
 
         if (enabled)
         {
             make_request(
                 config,
-                reinterpret_cast<libpico_mainwnd_t*>(param),
+                reinterpret_cast<libniix_mainwnd_t*>(param),
                 false);
         }
 
         // Insert item in about menu to force a check for update
-        libpico_menu_t* help;
-        libpico_menu_get(reinterpret_cast<libpico_mainwnd_t*>(param), libpico_menu_help, &help);
+        libniix_menu_t* help;
+        libniix_menu_get(reinterpret_cast<libniix_mainwnd_t*>(param), libniix_menu_help, &help);
 
         wchar_t check_for_update[DEFAULT_I18N_BUFFER_SIZE];
         size_t check_for_update_len = DEFAULT_I18N_BUFFER_SIZE;
-        libpico_i18n("amp_check_for_update", check_for_update, &check_for_update_len);
+        libniix_i18n("amp_check_for_update", check_for_update, &check_for_update_len);
 
         updater_request_data_t* data = new updater_request_data_t();
         data->config = config;
         data->force = true;
-        data->wnd = reinterpret_cast<libpico_mainwnd_t*>(param);
+        data->wnd = reinterpret_cast<libniix_mainwnd_t*>(param);
 
-        libpico_menu_insert_item(
+        libniix_menu_insert_item(
             help,
             0,
             check_for_update,
             check_for_update_len,
             check,
-            reinterpret_cast<libpico_param_t*>(data),
+            reinterpret_cast<libniix_param_t*>(data),
             nullptr);
 
-        libpico_menu_insert_separator(
+        libniix_menu_insert_separator(
             help,
             1);
 
@@ -265,20 +265,20 @@ libpico_result_t on_events(
     }
     }
 
-    return libpico_ok;
+    return libniix_ok;
 }
 
-libpico_result_t init_updater(int version, libpico_plugin_t* plugin)
+libniix_result_t init_updater(int version, libniix_plugin_t* plugin)
 {
-    if (version != LIBPICO_API_VERSION)
+    if (version != LIBNIIX_API_VERSION)
     {
-        return libpico_version_mismatch;
+        return libniix_version_mismatch;
     }
 
-    return libpico_register_hook(plugin, on_events, reinterpret_cast<libpico_param_t*>(plugin));
+    return libniix_register_hook(plugin, on_events, reinterpret_cast<libniix_param_t*>(plugin));
 }
 
-LIBPICO_DEFINE_PLUGIN(
+LIBNIIX_DEFINE_PLUGIN(
     "updater",
     "1.0",
     init_updater);

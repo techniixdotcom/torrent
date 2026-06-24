@@ -1,14 +1,14 @@
 ﻿using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Tools.WindowsInstallerXml.Bootstrapper;
-using PicoTorrentBootstrapper.Models;
-using PicoTorrentBootstrapper.Views;
+using NiiXTorrentBootstrapper.Models;
+using NiiXTorrentBootstrapper.Views;
 using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 
-namespace PicoTorrentBootstrapper.ViewModels
+namespace NiiXTorrentBootstrapper.ViewModels
 {
     public sealed class MainViewModel : PropertyNotifyBase
     {
@@ -65,7 +65,7 @@ namespace PicoTorrentBootstrapper.ViewModels
                             lock (this)
                             {
                                 Canceled = MessageBox.Show(
-                                    PicoBA.View,
+                                    NiiXBA.View,
                                     "Are you sure you want to cancel?",
                                     "NiiX Torrent",
                                     MessageBoxButton.YesNo,
@@ -85,7 +85,7 @@ namespace PicoTorrentBootstrapper.ViewModels
             {
                 if (_closeCommand == null)
                 {
-                    _closeCommand = new RelayCommand(_ => PicoBA.View.Close());
+                    _closeCommand = new RelayCommand(_ => NiiXBA.View.Close());
                 }
 
                 return _closeCommand;
@@ -180,24 +180,24 @@ namespace PicoTorrentBootstrapper.ViewModels
                 if (_bootstrapper.Command.Display == Display.Passive)
                 {
                     _bootstrapper.Engine.Log(LogLevel.Verbose, "Automatically closing the window for non-interactive install");
-                    PicoBA.Dispatcher.BeginInvoke(new Action(PicoBA.View.Close));
+                    NiiXBA.Dispatcher.BeginInvoke(new Action(NiiXBA.View.Close));
                 }
                 else
                 {
-                    PicoBA.Dispatcher.InvokeShutdown();
+                    NiiXBA.Dispatcher.InvokeShutdown();
                 }
                 return;
             }
             else if (e.Status >= 0 && PlannedAction == LaunchAction.UpdateReplace) // if we successfully applied an update close the window since the new Bundle should be running now.
             {
                 _bootstrapper.Engine.Log(LogLevel.Verbose, "Automatically closing the window since update successful.");
-                PicoBA.Dispatcher.BeginInvoke(new Action(PicoBA.View.Close));
+                NiiXBA.Dispatcher.BeginInvoke(new Action(NiiXBA.View.Close));
                 return;
             }
 
             // Force all commands to reevaluate CanExecute.
             // InvalidateRequerySuggested must be run on the UI thread.
-            PicoBA.Dispatcher.Invoke(new Action(CommandManager.InvalidateRequerySuggested));
+            NiiXBA.Dispatcher.Invoke(new Action(CommandManager.InvalidateRequerySuggested));
         }
 
         private void OnDetectBegin(object sender, DetectBeginEventArgs e)
@@ -234,7 +234,7 @@ namespace PicoTorrentBootstrapper.ViewModels
 
             // Force all commands to reevaluate CanExecute.
             // InvalidateRequerySuggested must be run on the UI thread.
-            PicoBA.Dispatcher.Invoke(new Action(CommandManager.InvalidateRequerySuggested));
+            NiiXBA.Dispatcher.Invoke(new Action(CommandManager.InvalidateRequerySuggested));
 
             InstallModel.Refresh();
         }

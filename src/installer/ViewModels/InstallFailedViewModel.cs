@@ -3,7 +3,7 @@ using System;
 using System.Diagnostics;
 using System.Windows.Input;
 
-namespace PicoTorrentBootstrapper.ViewModels
+namespace NiiXTorrentBootstrapper.ViewModels
 {
     public sealed class InstallFailedViewModel : PropertyNotifyBase
     {
