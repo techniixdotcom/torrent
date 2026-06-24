@@ -172,7 +172,7 @@ Task("Build-Installer-Bootstrapper")
         .SetMaxCpuCount(0)
         .UseToolVersion(MSBuildToolVersion.Default);
 
-    MSBuild("./src/installer/PicoTorrentBootstrapper.sln", settings);
+    MSBuild("./src/installer/NiiXTorrentBootstrapper.sln", settings);
 });
 
 Task("Build-Installer-Bundle")

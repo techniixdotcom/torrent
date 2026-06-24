@@ -31,7 +31,7 @@ else()
 endif()
 add_subdirectory(vendor/wx)
 
-# pico components
+# niix components
 add_subdirectory(src/pql)
 
 # vcpkg packages
@@ -42,7 +42,7 @@ find_package(nlohmann_json       CONFIG REQUIRED)
 find_package(unofficial-sqlite3  CONFIG REQUIRED)
 
 # Generate buildinfo file
-configure_file("${CMAKE_SOURCE_DIR}/src/picotorrent/buildinfo.cpp.in" "${CMAKE_SOURCE_DIR}/src/picotorrent/buildinfo.cpp" @ONLY)
+configure_file("${CMAKE_SOURCE_DIR}/src/niixtorrent/buildinfo.cpp.in" "${CMAKE_SOURCE_DIR}/src/niixtorrent/buildinfo.cpp" @ONLY)
 
 # Debug flags
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /Zi")
@@ -92,81 +92,81 @@ add_executable(
     NiiXTorrent
     WIN32
 
-    src/picotorrent/application
-    src/picotorrent/buildinfo
-    src/picotorrent/crashpadinitializer
-    src/picotorrent/main
-    src/picotorrent/persistencemanager
-    src/picotorrent/resources.rc
+    src/niixtorrent/application
+    src/niixtorrent/buildinfo
+    src/niixtorrent/crashpadinitializer
+    src/niixtorrent/main
+    src/niixtorrent/persistencemanager
+    src/niixtorrent/resources.rc
 
     # API
-    src/picotorrent/api/libpico
+    src/niixtorrent/api/libniix
 
     # BitTorrent
-    src/picotorrent/bittorrent/session
-    src/picotorrent/bittorrent/torrenthandle
+    src/niixtorrent/bittorrent/session
+    src/niixtorrent/bittorrent/torrenthandle
 
     # Core
-    src/picotorrent/core/configuration
-    src/picotorrent/core/database
-    src/picotorrent/core/environment
-    src/picotorrent/core/utils
+    src/niixtorrent/core/configuration
+    src/niixtorrent/core/database
+    src/niixtorrent/core/environment
+    src/niixtorrent/core/utils
 
     # Http
-    src/picotorrent/http/httpclient
+    src/niixtorrent/http/httpclient
 
     # IPC
-    src/picotorrent/ipc/applicationoptionsconnection
-    src/picotorrent/ipc/server
+    src/niixtorrent/ipc/applicationoptionsconnection
+    src/niixtorrent/ipc/server
 
     # Dialogs
-    src/picotorrent/ui/dialogs/aboutdialog
-    src/picotorrent/ui/dialogs/addmagnetlinkdialog
-    src/picotorrent/ui/dialogs/addtrackerdialog
-    src/picotorrent/ui/dialogs/addtorrentdialog
-    src/picotorrent/ui/dialogs/createtorrentdialog
-    src/picotorrent/ui/dialogs/listeninterfacedialog
-    src/picotorrent/ui/dialogs/preferencesadvancedpage
-    src/picotorrent/ui/dialogs/preferencesconnectionpage
-    src/picotorrent/ui/dialogs/preferencesdialog
-    src/picotorrent/ui/dialogs/preferencesdownloadspage
-    src/picotorrent/ui/dialogs/preferencesgeneralpage
-    src/picotorrent/ui/dialogs/preferenceslabelspage
-    src/picotorrent/ui/dialogs/preferencesproxypage
-    src/picotorrent/ui/dialogs/textoutputdialog
+    src/niixtorrent/ui/dialogs/aboutdialog
+    src/niixtorrent/ui/dialogs/addmagnetlinkdialog
+    src/niixtorrent/ui/dialogs/addtrackerdialog
+    src/niixtorrent/ui/dialogs/addtorrentdialog
+    src/niixtorrent/ui/dialogs/createtorrentdialog
+    src/niixtorrent/ui/dialogs/listeninterfacedialog
+    src/niixtorrent/ui/dialogs/preferencesadvancedpage
+    src/niixtorrent/ui/dialogs/preferencesconnectionpage
+    src/niixtorrent/ui/dialogs/preferencesdialog
+    src/niixtorrent/ui/dialogs/preferencesdownloadspage
+    src/niixtorrent/ui/dialogs/preferencesgeneralpage
+    src/niixtorrent/ui/dialogs/preferenceslabelspage
+    src/niixtorrent/ui/dialogs/preferencesproxypage
+    src/niixtorrent/ui/dialogs/textoutputdialog
 
     # Filters
-    src/picotorrent/ui/filters/pqltorrentfilter
+    src/niixtorrent/ui/filters/pqltorrentfilter
 
     # Models
-    src/picotorrent/ui/models/filestoragemodel
-    src/picotorrent/ui/models/peerlistmodel
-    src/picotorrent/ui/models/torrentlistmodel
-    src/picotorrent/ui/models/trackerlistmodel
+    src/niixtorrent/ui/models/filestoragemodel
+    src/niixtorrent/ui/models/peerlistmodel
+    src/niixtorrent/ui/models/torrentlistmodel
+    src/niixtorrent/ui/models/trackerlistmodel
 
     # Persistence
-    src/picotorrent/ui/persistence/persistenttorrentlistview
+    src/niixtorrent/ui/persistence/persistenttorrentlistview
 
     # UI
-    src/picotorrent/ui/console
-    src/picotorrent/ui/mainframe
-    src/picotorrent/ui/statusbar
-    src/picotorrent/ui/taskbaricon
-    src/picotorrent/ui/torrentcontextmenu
-    src/picotorrent/ui/torrentdetailsfilespanel
-    src/picotorrent/ui/torrentdetailsoverviewpanel
-    src/picotorrent/ui/torrentdetailspeerspanel
-    src/picotorrent/ui/torrentdetailstrackerspanel
-    src/picotorrent/ui/torrentdetailsview
-    src/picotorrent/ui/torrentfilelistview
-    src/picotorrent/ui/torrentlistview
-    src/picotorrent/ui/translator
+    src/niixtorrent/ui/console
+    src/niixtorrent/ui/mainframe
+    src/niixtorrent/ui/statusbar
+    src/niixtorrent/ui/taskbaricon
+    src/niixtorrent/ui/torrentcontextmenu
+    src/niixtorrent/ui/torrentdetailsfilespanel
+    src/niixtorrent/ui/torrentdetailsoverviewpanel
+    src/niixtorrent/ui/torrentdetailspeerspanel
+    src/niixtorrent/ui/torrentdetailstrackerspanel
+    src/niixtorrent/ui/torrentdetailsview
+    src/niixtorrent/ui/torrentfilelistview
+    src/niixtorrent/ui/torrentlistview
+    src/niixtorrent/ui/translator
 
     # Widgets
-    src/picotorrent/ui/widgets/pieceprogressbar
+    src/niixtorrent/ui/widgets/pieceprogressbar
 
     # Win32 specific stuff
-    src/picotorrent/ui/win32/openfiledialog
+    src/niixtorrent/ui/win32/openfiledialog
 )
 
 target_compile_definitions(
@@ -181,14 +181,14 @@ target_compile_definitions(
     -DWIN32
     -DWIN32_LEAN_AND_MEAN
 
-    -DLIBPICO_API_EXPORT
+    -DLIBNIIX_API_EXPORT
 
-    -DPICO_GIT_COMMITISH=${GITVERSION_VAR_SHORTSHA}
-    -DPICO_VERSION_MAJOR=${GITVERSION_VAR_VERSION_MAJOR}
-    -DPICO_VERSION_MINOR=${GITVERSION_VAR_VERSION_MINOR}
-    -DPICO_VERSION_PATCH=${GITVERSION_VAR_VERSION_PATCH}
+    -DNIIX_GIT_COMMITISH=${GITVERSION_VAR_SHORTSHA}
+    -DNIIX_VERSION_MAJOR=${GITVERSION_VAR_VERSION_MAJOR}
+    -DNIIX_VERSION_MINOR=${GITVERSION_VAR_VERSION_MINOR}
+    -DNIIX_VERSION_PATCH=${GITVERSION_VAR_VERSION_PATCH}
 
-    -DPICO_WX_GIT_COMMITISH=${PICO_WX_GIT_COMMITISH}
+    -DNIIX_WX_GIT_COMMITISH=${NIIX_WX_GIT_COMMITISH}
 )
 
 target_compile_options(NiiXTorrent PRIVATE /guard:cf /W4)

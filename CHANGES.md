@@ -44,7 +44,7 @@ project.
   newer dependency versions do not fail the build. `/guard:cf` (control-flow
   guard) is retained.
 - The optional .NET installer bootstrapper keeps its internal
-  `PicoTorrentBootstrapper` assembly/namespace for build stability; only its
+  `NiiXTorrentBootstrapper` assembly/namespace for build stability; only its
   user-facing strings are rebranded.
 - The original backend endpoints (update check, GeoIP database) pointed at the
   discontinued project's server. They now use NiiX placeholders and are inert

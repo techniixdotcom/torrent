@@ -64,7 +64,7 @@
 
         <BootstrapperApplicationRef Id="ManagedBootstrapperApplicationHost">
             <Payload SourceFile="../../src/installer/bin/Release/BootstrapperCore.config"/>
-            <Payload SourceFile="../../src/installer/bin/Release/PicoTorrentBootstrapper.dll"/>
+            <Payload SourceFile="../../src/installer/bin/Release/NiiXTorrentBootstrapper.dll"/>
             <Payload SourceFile="../../src/installer/bin/Release/Microsoft.Deployment.WindowsInstaller.dll"/>
         </BootstrapperApplicationRef>
 
